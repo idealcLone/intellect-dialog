@@ -7,18 +7,15 @@ const initSocketIO = (app) => {
     const server = http.createServer(app);
     const io = new Server(server, {
         cors: {
-            origin: "*", // Allow connections from the frontend
+            origin: "*",
             methods: ["GET", "POST"],
             credentials: true
         }
     });
 
     io.on('connection', (socket) => {
-        console.log('A user connected');
-
         socket.on('joinDialog', (dialogId) => {
             socket.join(dialogId);
-            console.log(`User joined dialog: ${dialogId}`);
         });
 
         socket.on('sendMessage', async ({ dialogId, userId, message }) => {
@@ -42,10 +39,6 @@ const initSocketIO = (app) => {
             } else {
                 await createMessage({ dialogId, senderId: userId, text });
             }
-        });
-
-        socket.on('disconnect', () => {
-            console.log('User disconnected');
         });
     });
 
